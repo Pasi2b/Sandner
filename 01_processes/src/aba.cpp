@@ -14,10 +14,10 @@ int main() {
     while(true){        
         if(pid > 0) {
             cout << "B" << flush;
-            sleep(1);
+            sleep(0.5);
         }else if(pid == 0){
             cout << "A" << flush;
-            sleep(1);
+            sleep(0.5);
         }
     }
 }
