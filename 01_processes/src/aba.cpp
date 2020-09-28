@@ -5,6 +5,9 @@
 */
 #include <iostream>
 #include <unistd.h>
+#include <chrono>
+#include <thread>
+
 
 using namespace std;
 
@@ -14,10 +17,12 @@ int main() {
     while(true){        
         if(pid > 0) {
             cout << "B" << flush;
-            sleep(0.5);
+            chrono::milliseconds sleeptime(500);
+            this_thread::sleep_for(sleeptime);
         }else if(pid == 0){
             cout << "A" << flush;
-            sleep(0.5);
+            chrono::milliseconds sleeptime(500);
+            this_thread::sleep_for(sleeptime);
         }
     }
 }
