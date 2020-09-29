@@ -10,26 +10,35 @@
 #include <csignal>
 #include <cstdlib>
 #include <cerrno>
-
+#include <sys/wait.h>
 
 using namespace std;
 
 
 int main(int argc, char const* argv[]) {
     auto pid{fork()};
-    //int count = 1;
-    while(true){              
-        if(pid > 0) {
-            cout << "B" << flush;
-            chrono::milliseconds sleeptime(500);
-            this_thread::sleep_for(sleeptime);
-            //if(count == 6){
-            //    kill(pid, SIGKILL);
-            //    quick_exit(EXIT_SUCCESS);
-            //}
-        }else if(pid == 0){
-            execl("charout", "charout", "G", nullptr);        
+    int status{};
+    
+    if(pid == 0){
+        try{
+            execl("charout", "charout", "A", nullptr);        
+        }catch(...){
+            cerr << "charout ist nicht verfügbar!" << errno << endl;
         }
-        //count ++;
-    }
+    }else if(pid > 0) {
+        auto pid2{fork()};
+        if(pid2 == 0){
+            try{
+                execl("charout", "charout", "B", nullptr);        
+            }catch(...){
+                cerr << "charout ist nicht verfügbar!" << errno << endl;
+            }
+        }else if(pid2 > 0){
+            sleep(3);
+            kill(pid, SIGKILL);  
+            kill(pid2, SIGKILL);
+            waitpid(pid, &status, 0);
+            waitpid(pid2, &status, 0);
+        }           
+    }                      
 }
