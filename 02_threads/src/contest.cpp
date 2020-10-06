@@ -21,7 +21,7 @@ class Car{
 
             while(true){
                 runden++;
-                cout << runden << " " << autotyp << endl;
+                cout << to_string(runden) << " " << autotyp << endl;
                 this_thread::sleep_for(1s);   
             }
         }
