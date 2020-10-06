@@ -9,6 +9,22 @@
 
 using namespace std;
 
-int main(/*int argc, char *argv[]*/){
-    cout << "hallo" << endl;
+
+void rennen(){
+    int runden = 0;
+    string autotyp = "Toyota GT86";
+
+    while(true){
+        runden++;
+        cout << runden << " " << autotyp << endl;
+        cout << flush;
+        this_thread::sleep_for(1s);   
+    }
+}
+        
+
+
+int main(/*int argc, char *argv[]*/){    
+    thread t{rennen};
+    t.join();
 }
