@@ -8,8 +8,29 @@
 #include <thread>
 
 using namespace std;
+using namespace std::literals;
 
 
+
+class Car{
+    private: 
+        string autotyp;
+    public:
+        void operator()(){
+            int runden = 0;
+
+            while(true){
+                runden++;
+                cout << runden << " " << autotyp << endl;
+                this_thread::sleep_for(1s);   
+            }
+        }
+    Car(string Autotyp){
+      this->autotyp = Autotyp;
+    }
+};
+
+/*
 void rennen(){
     int runden = 0;
     string autotyp = "Toyota GT86";
@@ -21,10 +42,11 @@ void rennen(){
         this_thread::sleep_for(1s);   
     }
 }
-        
+*/      
 
 
-int main(/*int argc, char *argv[]*/){    
-    thread t{rennen};
-    t.join();
+int main(){
+    Car toyota("Toyota GT86") ;   
+    thread t1{ref(toyota)};
+    t1.join();
 }
