@@ -8,6 +8,7 @@
 #include <thread>
 #include <random>
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 using namespace std::literals;
@@ -26,11 +27,14 @@ class Car{
             uniform_real_distribution<> dis{1, 10};
             int runden = 0;
             double time{};
+            ostringstream buf;
 
             while(true){
                 time = dis(gen);
                 runden++;
-                cout << to_string(runden) << " " << autotyp << ": " << setprecision(3) << dis(gen) << "\n" << flush;
+                buf << to_string(runden) << " " << autotyp << ": " << setprecision(3) << dis(gen) << "\n" << flush;
+                cout << buf.str();
+                buf.str("");
                 this_thread::sleep_for(milliseconds(static_cast<int>(time * 1000)));   
             }
         }
@@ -47,12 +51,15 @@ void rennen(){
     mt19937 gen{rd()};
     uniform_real_distribution<> dis{1, 10};
     double time{};
+    ostringstream buf2;
     
 
     while(true){
         time = dis(gen);
         runden2++;
-        cout << to_string(runden2) << " " << autotyp2 << ": " << setprecision(3) << dis(gen) << "\n" << flush;
+        buf2 << to_string(runden2) << " " << autotyp2 << ": " << setprecision(3) << dis(gen) << "\n" << flush;
+        cout << buf2.str();
+        buf2.str("");
         this_thread::sleep_for(milliseconds(static_cast<int>(time * 1000)));   
     }
 }
