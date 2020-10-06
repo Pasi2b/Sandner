@@ -30,7 +30,7 @@ class Car{
             while(true){
                 time = dis(gen);
                 runden++;
-                cout << to_string(runden) << " " << autotyp << " " << dis(gen) << "\n" << flush;
+                cout << to_string(runden) << " " << autotyp << ": " << setprecision(3) << dis(gen) << "\n" << flush;
                 this_thread::sleep_for(milliseconds(static_cast<int>(time * 1000)));   
             }
         }
@@ -52,7 +52,7 @@ void rennen(){
     while(true){
         time = dis(gen);
         runden2++;
-        cout << to_string(runden2) << " " << autotyp2 << " " << dis(gen) << "\n" << flush;
+        cout << to_string(runden2) << " " << autotyp2 << ": " << setprecision(3) << dis(gen) << "\n" << flush;
         this_thread::sleep_for(milliseconds(static_cast<int>(time * 1000)));   
     }
 }
