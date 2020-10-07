@@ -21,7 +21,7 @@ class Car{
         string autotyp;
         
     public:
-        void operator()(){
+        void operator()(double& totaltime){
             random_device rd;
             mt19937 gen{rd()};
             uniform_real_distribution<> dis{1, 10};
@@ -31,20 +31,26 @@ class Car{
 
             while(runden <= 9){
                 time = dis(gen);
+                totaltime += time;
                 runden++;
-                buf << to_string(runden) << " " << autotyp << ": " << setprecision(3) << dis(gen) << "\n" << flush;
+                buf << to_string(runden) << " " << autotyp << ": " << setprecision(3) << dis(gen) << "s" << "\n" << flush;
                 cout << buf.str();
                 buf.str("");
                 this_thread::sleep_for(milliseconds(static_cast<int>(time * 1000)));   
             }
         }
+
+    string get_name(){
+        return autotyp;
+    }
+
     Car(string Autotyp){
       this->autotyp = Autotyp;
     }
 };
 
 
-void rennen(){
+void rennen(double& totaltime2){
     int runden2 = 0;
     string autotyp2 = "Toyota Supra";
     random_device rd;
@@ -55,8 +61,9 @@ void rennen(){
 
     while(runden2 <= 9){
         time = dis(gen);
+        totaltime2 += time;
         runden2++;
-        buf2 << to_string(runden2) << " " << autotyp2 << ": " << setprecision(3) << dis(gen) << "\n" << flush;
+        buf2 << to_string(runden2) << " " << autotyp2 << ": " << setprecision(3) << dis(gen) << "s" << "\n" << flush;
         cout << buf2.str();
         buf2.str("");
         this_thread::sleep_for(milliseconds(static_cast<int>(time * 1000)));   
@@ -66,9 +73,19 @@ void rennen(){
 
 
 int main(){
+    double totaltime{0};
+    double totaltime2{0};
     Car toyota("Toyota GT86") ;   
-    thread t1{ref(toyota)};
-    thread t2{rennen};
+    thread t1{ref(toyota), ref(totaltime)};
+    thread t2{rennen, ref(totaltime2)};
     t1.join();
-    t2.join(); 
+    t2.join();
+    
+    if(totaltime < totaltime2){
+        cout << "Sieger ist: " << toyota.get_name() << " mit " << totaltime << "s" <<endl;
+        cout << "Verliere ist: Toyota Supra mit " << totaltime2 << "s" << endl; 
+    }else{
+        cout << "Sieger ist: Toyota Supra mit " << totaltime2 << "s" << endl;
+        cout << "Verliere ist: " << toyota.get_name() << " mit " << totaltime << "s" << endl; 
+    }
 }
