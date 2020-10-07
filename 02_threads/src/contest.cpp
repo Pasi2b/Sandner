@@ -29,7 +29,7 @@ class Car{
             double time{};
             ostringstream buf;
 
-            while(true){
+            while(runden <= 9){
                 time = dis(gen);
                 runden++;
                 buf << to_string(runden) << " " << autotyp << ": " << setprecision(3) << dis(gen) << "\n" << flush;
@@ -52,9 +52,8 @@ void rennen(){
     uniform_real_distribution<> dis{1, 10};
     double time{};
     ostringstream buf2;
-    
 
-    while(true){
+    while(runden2 <= 9){
         time = dis(gen);
         runden2++;
         buf2 << to_string(runden2) << " " << autotyp2 << ": " << setprecision(3) << dis(gen) << "\n" << flush;
@@ -71,5 +70,5 @@ int main(){
     thread t1{ref(toyota)};
     thread t2{rennen};
     t1.join();
-    t2.join();
+    t2.join(); 
 }
