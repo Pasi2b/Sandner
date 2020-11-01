@@ -83,21 +83,20 @@ int main(int argc, char* argv[]){
             cout << "Unerwarteter Fehler" << endl;
         }
     }else{
-            double totaltime{0};
-    double totaltime2{0};
-    Car toyota("Toyota GT86") ;   
-    thread t1{ref(toyota), ref(totaltime)};
-    thread t2{rennen, ref(totaltime2)};
-    t1.join();
-    t2.join();
+        double totaltime{0};
+        double totaltime2{0};
+        Car toyota("Toyota GT86") ;   
+        thread t1{ref(toyota), ref(totaltime)};
+        thread t2{rennen, ref(totaltime2)};
+        t1.join();
+        t2.join();
     
-    if(totaltime < totaltime2){
-        cout << endl << "Sieger ist: " << toyota.get_name() << " mit " << totaltime << "s" <<endl;
-        cout << "Verliere ist: Toyota Supra mit " << totaltime2 << "s" << endl; 
-    }else{   
-        cout << endl << "Sieger ist: Toyota Supra mit " << totaltime2 << "s" << endl;
-        cout << "Verliere ist: " << toyota.get_name() << " mit " << totaltime << "s" << endl; 
+        if(totaltime < totaltime2){
+            cout << endl << "Sieger ist: " << toyota.get_name() << " mit " << totaltime << "s" <<endl;
+            cout << "Verliere ist: Toyota Supra mit " << totaltime2 << "s" << endl; 
+        }else{   
+            cout << endl << "Sieger ist: Toyota Supra mit " << totaltime2 << "s" << endl;
+            cout << "Verliere ist: " << toyota.get_name() << " mit " << totaltime << "s" << endl; 
+        }
     }
-    }
-
 }
