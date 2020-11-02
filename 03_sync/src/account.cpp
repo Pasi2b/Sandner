@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include "include/account.h"
+#include <mutex>
+#include <thread>
 
 using namespace std;
 
@@ -14,7 +16,8 @@ void Account::deposit(int amount){
 }
 
 bool Account::withdraw(int amount){
-    
+
+    lock_guard<mutex> lock{mtx};
     this_thread::yield();
     if(amount <= get_balance()){     
         balance -= amount;

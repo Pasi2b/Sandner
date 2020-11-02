@@ -5,10 +5,12 @@
 */
 
 #include <iostream>
+#include <mutex>
 
 class Account{
         private:
             int balance{0};
+            std::mutex mtx;
             
         public:
             Account(int amount) : balance{amount}{};
