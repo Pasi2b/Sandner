@@ -17,4 +17,18 @@ class Account{
             int get_balance();  
             void deposit(int amount);
             bool withdraw(int amount);
-    };
+};
+
+class Depositer{
+    private:
+        Account& accd;
+        int deposits;
+    
+    public:
+        Depositer(Account& a, int d) : accd(a), deposits(d){};
+        void operator()(){
+            for(int i = 0; i < deposits; i++){
+                accd.deposit(1);
+            }
+        };
+};
