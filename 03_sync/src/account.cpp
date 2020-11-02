@@ -11,7 +11,21 @@
 
 using namespace std;
 
+class Depositer{
+    private:
+        Account& accd;
+    
+    public:
+        Depositer(Account& a) : accd(a){};
+        void operator()(){
+            for(int i = 0; i < 5; i++){
+                accd.deposit(1);
+            }
+        };
+};
+
 void Account::deposit(int amount){
+    unique_lock<mutex> lock{mtx};   
     balance += amount;
 }
 
