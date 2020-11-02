@@ -14,7 +14,9 @@ void Account::deposit(int amount){
 }
 
 bool Account::withdraw(int amount){
-    if(amount <= get_balance()){
+    
+    this_thread::yield();
+    if(amount <= get_balance()){     
         balance -= amount;
         cout << "Erfolgreiches Abheben" << endl;
         return true;
