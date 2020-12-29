@@ -14,9 +14,9 @@ inc_dir = include_directories(['include',
 
 #subdir('XXX')
 
-src = ['src/work_queue.cpp']
+src = ['src/work_queue.cpp', 'src/loadsim.cpp']
 
-executable('work_queue',
+executable('loadsim',
             sources : src,
             include_directories : inc_dir,
             #dependencies : XXX_dep,
