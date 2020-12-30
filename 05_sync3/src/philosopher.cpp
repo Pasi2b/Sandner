@@ -7,6 +7,7 @@
 #include <mutex>
 #include <sstream>
 #include "philosopher.h"
+#include "semaphore.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ void println(const T& word, const Rest&... rest) {
 
 
 
-void Philosopher::operator()(){
+void Philosopher::operator()(Semaphore* sem){
     stringstream buf;
 
     while(true){
@@ -36,6 +37,10 @@ void Philosopher::operator()(){
         this_thread::sleep_for(1s);
 
         println("Philosopher", id, "attempts to get left fork");
+
+        if (sem != nullptr){
+            sem->acquire();
+        }
 
         left_fork.lock();
 
@@ -52,13 +57,17 @@ void Philosopher::operator()(){
 
         println("Philosopher", id, "finished eating");
 
-        println("Philosopher", id, "released left fork");
+        if (sem != nullptr){
+            sem->release();
+        }
 
         left_fork.unlock();
 
-        println("Philosopher", id, "released right fork");
+        println("Philosopher", id, "released left fork");
 
         right_fork.unlock();
+
+        println("Philosopher", id, "released right fork");
     }
 }
 

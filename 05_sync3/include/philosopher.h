@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <vector>
+#include "semaphore.h"
 
 class Philosopher{
     private:
@@ -16,5 +17,5 @@ class Philosopher{
         Philosopher(int id, std::mutex& left_f, std::mutex& right_f) :
             id(id), left_fork(left_f), right_fork(right_f) {};
         
-        void operator()();
+        void operator()(Semaphore* sem);
 };
