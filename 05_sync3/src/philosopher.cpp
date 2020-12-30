@@ -28,11 +28,8 @@ void println(const T& word, const Rest&... rest) {
 
 
 
-void Philosopher::operator()(Semaphore* sem){
-    stringstream buf;
-
+void Philosopher::operator()(Semaphore* sem, bool livelock){
     while(true){
-
         println("Philosopher", id, "is thinking...");
         this_thread::sleep_for(1s);
 
@@ -46,28 +43,49 @@ void Philosopher::operator()(Semaphore* sem){
 
         println("Philosopher", id, "got left fork. Now he wants the right one...");
 
-        this_thread::sleep_for(5s);
-
         println("Philosopher", id, "attempts to get right fork");
 
-        right_fork.lock();
+        if(!livelock){
+            right_fork.lock();
+            
+            println("Philosopher", id, "got right fork. Now he is eating...")
+            this_thread::sleep_for(2s);
 
-        println("Philosopher", id, "got right fork. Now he is eating...");
-        this_thread::sleep_for(2s);
+            println("Philosopher", id, "finished eating");
 
-        println("Philosopher", id, "finished eating");
+            left_fork.unlock();
 
-        if (sem != nullptr){
-            sem->release();
+            println("Philosopher", id, "released left fork");
+
+            right_fork.unlock();
+
+            println("Philosopher", id, "released right fork");
+        }else{
+            if(right_fork.try_lock_for(3s)){
+                println("Philosopher", id, "got right fork. Now he is eating...");
+                this_thread::sleep_for(2s);
+
+                println("Philosopher", id, "finished eating");
+
+                if(sem != nullptr){
+                    sem->release();
+                }
+
+                left_fork.unlock();
+                println("Philosopher", id, "releaded left fork");
+                right_fork.unlock();
+                println("Philosopher", id, "releaded right fork");
+            }else{
+                this_thread::sleep_for(100ms);
+
+                if(sem != nullptr){
+                    sem->release();
+                }
+
+                left_fork.unlock();
+                println("Philosopher", id, "releades left fork due to timeout getting the right one!");
+            }
         }
-
-        left_fork.unlock();
-
-        println("Philosopher", id, "released left fork");
-
-        right_fork.unlock();
-
-        println("Philosopher", id, "released right fork");
     }
 }
 

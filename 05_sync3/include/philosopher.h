@@ -10,12 +10,12 @@
 class Philosopher{
     private:
         int id;
-        std::mutex& left_fork;
-        std::mutex& right_fork;
+        std::timed_mutex& left_fork;
+        std::timed_mutex& right_fork;
 
     public:
-        Philosopher(int id, std::mutex& left_f, std::mutex& right_f) :
+        Philosopher(int id, std::timed_mutex& left_f, std::timed_mutex& right_f) :
             id(id), left_fork(left_f), right_fork(right_f) {};
         
-        void operator()(Semaphore* sem);
+        void operator()(Semaphore* sem, bool livelock);
 };
