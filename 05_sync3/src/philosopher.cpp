@@ -13,7 +13,7 @@ using namespace std;
 
 mutex out_mtx;
 
-void println(const std::vector<string>& vs){
+void println(const initializer_list<string>& vs){
     lock_guard<mutex> lck(out_mtx);
 
     for(string s : vs){
