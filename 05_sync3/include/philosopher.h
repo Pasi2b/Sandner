@@ -4,6 +4,7 @@
 
 #include <thread>
 #include <mutex>
+#include <vector>
 
 class Philosopher{
     private:

@@ -4,10 +4,24 @@
 
 #include <iostream>
 #include <thread>
+#include <mutex>
 #include <sstream>
 #include "philosopher.h"
 
 using namespace std;
+
+
+mutex out_mtx;
+
+void println(const std::vector<string>& vs){
+    lock_guard<mutex> lck(out_mtx);
+
+    for(string s : vs){
+        cout << s << " ";
+    }
+    cout << endl;
+}
+
 
 void Philosopher::operator()(){
     stringstream buf;
