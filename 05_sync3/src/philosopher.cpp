@@ -11,16 +11,20 @@
 using namespace std;
 
 
-mutex out_mtx;
+recursive_mutex out_mtx;
 
-void println(const initializer_list<string>& vs){
-    lock_guard<mutex> lck(out_mtx);
-
-    for(string s : vs){
-        cout << s << " ";
-    }
+void println() {
+    lock_guard<recursive_mutex> lg{out_mtx};
     cout << endl;
 }
+
+template<typename T, typename... Rest>
+void println(const T& word, const Rest&... rest) {
+    lock_guard<recursive_mutex> lg{out_mtx};
+    cout << word << ' ';
+    println(rest...);
+}
+
 
 
 void Philosopher::operator()(){
@@ -28,45 +32,29 @@ void Philosopher::operator()(){
 
     while(true){
 
-        buf << "Philosopher " << id << " is thinking..." << endl;
-        cout << buf.str() << endl;
+        println("Philosopher", id, "is thinking...");
         this_thread::sleep_for(1s);
 
-        buf << "Philosopher " << id << " attempts to get left fork" << endl;
-        cout << buf.str() << endl;
-        buf.str("");
+        println("Philosopher", id, "attempts to get left fork");
 
         left_fork.lock();
 
-        buf << "Philosopher " << id << " got left fork. Now he wants the right one... " << endl;
-        cout << buf.str() << endl;
-        buf.str("");
+        println("Philosopher", id, "got left fork. Now he wants the right one...");
 
-        buf << "Philosopher " << id << " attempts to get right fork" << endl;
-        cout << buf.str() << endl;
-        buf.str("");
+        println("Philosopher", id, "attempts to get right fork");
 
         right_fork.lock();
 
-        buf << "Philosopher " << id << " got right fork. Now he is eating..." << endl;
-        cout << buf.str();
-        buf.str("");
-
+        println("Philosopher", id, "got right fork. Now he is eating...");
         this_thread::sleep_for(2s);
 
-        buf << "Philosopher " << id << " finished eating" << endl;
-        cout << buf.str() << endl;
-        buf.str("");
+        println("Philosopher", id, "finished eating");
 
-        buf << "Philosopher " << id << " released left fork" << endl;
-        cout << buf.str() << endl;
-        buf.str("");
+        println("Philosopher", id, "released left fork");
 
         left_fork.unlock();
 
-        buf << "Philosopher " << id << " released right fork" << endl;
-        cout << buf.str() << endl;
-        buf.str("");
+        println("Philosopher", id, "released right fork");
 
         right_fork.unlock();
     }
