@@ -14,7 +14,7 @@ inc_dir = include_directories(['include',
 
 #subdir('XXX')
 
-src = ['src/philosopher.cpp', 'src/main.cpp']
+src = ['src/philosopher.cpp', 'src/main.cpp', 'src/semaphore.cpp']
 
 executable('main',
             sources : src,
