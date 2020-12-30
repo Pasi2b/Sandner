@@ -8,6 +8,7 @@
 #include <mutex>
 #include <queue>
 #include <random>
+#include "include/CLI11.hpp"
 
 using namespace std;
 
@@ -35,10 +36,15 @@ void worker (int id, WorkQueue& q){
 
 
 
-int main() {
-    int i{0};
-    WorkQueue q(10);
+int main(int argc, char* const argv[]) {
+    CLI::App app("Boss and worker simulation");
+    size_t size;
+    app.add_option("size", size, "Size of the queue")->required();
+    CLI11_PARSE(app, argc, argv);
 
+    int i{0};
+    WorkQueue q(size);
+    string boss_output;
 
     thread t1{worker, 1, ref(q)};
     thread t2{worker, 2, ref(q)};
@@ -49,13 +55,13 @@ int main() {
     mt19937 gen{rd()};
     uniform_real_distribution<> dis{0, 1};
 
-
     while(true){
         WorkPacket WP{WorkPacket(i)};
         q.push(WP);
         wait_boss = dis(gen);
         chrono::milliseconds time_to_wait_boss{int (wait_boss * 1000)};
-        cout << "B: Submitted work packet " << i << endl;
+        boss_output = "B: Submitted work packet " + to_string(i) + "\n";
+        cout << boss_output << flush;
         this_thread::sleep_for(time_to_wait_boss);
         i++;
     }
