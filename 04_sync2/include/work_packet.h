@@ -12,7 +12,7 @@ class WorkPacket{
     public:
         WorkPacket(int id) : id(id){};
         int get_id() const{
-            return id;
+            return this->id;
         }
 };
 
