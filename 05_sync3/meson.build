@@ -14,9 +14,9 @@ inc_dir = include_directories(['include',
 
 #subdir('XXX')
 
-src = ['src/philosopher.cpp', 'src/dining.cpp']
+src = ['src/philosopher.cpp', 'src/main.cpp']
 
-executable('dining',
+executable('main',
             sources : src,
             include_directories : inc_dir,
             dependencies : thread_dep,

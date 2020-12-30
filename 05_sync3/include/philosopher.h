@@ -8,10 +8,12 @@
 class Philosopher{
     private:
         int id;
-        timed_mutex
-
-
+        std::mutex& left_fork;
+        std::mutex& right_fork;
 
     public:
-        Philosopher();
-}
+        Philosopher(int id, std::mutex& left_f, std::mutex& right_f) :
+            id(id), left_fork(left_f), right_fork(right_f) {};
+        
+        void operator()();
+};
