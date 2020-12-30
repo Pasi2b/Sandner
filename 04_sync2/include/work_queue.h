@@ -17,10 +17,12 @@ class WorkQueue{
         std::condition_variable not_empty;
         std::condition_variable not_full;
         std::size_t size;
-
+        
 
     public:
-        WorkQueue();
+        WorkQueue(size_t size_){
+            size = size_;
+        };
         WorkPacket pop();
         void push(WorkPacket wp);
 };

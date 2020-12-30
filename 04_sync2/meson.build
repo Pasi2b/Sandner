@@ -19,7 +19,7 @@ src = ['src/work_queue.cpp', 'src/loadsim.cpp']
 executable('loadsim',
             sources : src,
             include_directories : inc_dir,
-            #dependencies : XXX_dep,
+            dependencies : thread_dep,
             #link_with : XXX_lib
            )
 
