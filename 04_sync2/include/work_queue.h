@@ -22,6 +22,7 @@ class WorkQueue{
     public:
         WorkQueue(size_t size_){
             size = size_;
+            
         };
         WorkPacket pop();
         void push(WorkPacket wp);

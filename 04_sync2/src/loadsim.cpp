@@ -55,7 +55,7 @@ int main() {
         q.push(WP);
         wait_boss = dis(gen);
         chrono::milliseconds time_to_wait_boss{int (wait_boss * 1000)};
-        cout << "B: Submitted work packet " << i << " [" << to_string(wait_boss) << "]" << endl;
+        cout << "B: Submitted work packet " << i << endl;
         this_thread::sleep_for(time_to_wait_boss);
         i++;
     }
