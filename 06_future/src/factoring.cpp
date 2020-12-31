@@ -31,7 +31,7 @@ string checkValidator(const string& s){
     }
 }
 
-void print(vector<InfInt> &numbers, vector<future<vector<InfInt>>> &result){
+void print(vector<InfInt> &numbers, vector<shared_future<vector<InfInt>>> &result){
     for(size_t i = 0; i < result.size(); i++){    
         cout << numbers[i] << ": "<< flush;
         vector<InfInt> results = result[i].get();
@@ -41,6 +41,21 @@ void print(vector<InfInt> &numbers, vector<future<vector<InfInt>>> &result){
         cout << "\n" << flush;
     }
 }
+
+
+void checkFactors(vector<InfInt> &numbers, vector<shared_future<vector<InfInt>>> &results){
+    for(size_t i = 0; i < numbers.size(); i++){
+        vector<InfInt> result = results[i].get();
+        InfInt number{result[0]*result[1]};
+        for(size_t j = 2; j < result.size(); j++){
+            number = number*result[j];       
+        }
+        if(number != numbers[i]){
+            cerr << numbers[i] << "primefactors are incorrect" << number << "\n"<<flush;
+        }
+    }
+}
+
 
 int main(int argc, char const *argv[]){
     vector<string> inputs;
@@ -56,7 +71,7 @@ int main(int argc, char const *argv[]){
     try{
             app.parse(argc, argv);
             vector<InfInt> newinput;
-            vector<future<vector<InfInt>>> result;
+            vector<shared_future<vector<InfInt>>> result;
 
             for(size_t i = 0; i < inputs.size(); i++){
                 InfInt input_item = inputs[i];
@@ -70,7 +85,7 @@ int main(int argc, char const *argv[]){
                     cout << factors[j] << " " << flush;
                 }
                 cout << "\n" << flush;*/
-                result.push_back(async(get_factors, newinput[i]));
+                result.push_back(async(launch::deferred, get_factors, newinput[i]));
             }
 
             /*
@@ -85,7 +100,9 @@ int main(int argc, char const *argv[]){
             */
 
             thread t1([&](){print(newinput, result);});
+            thread t2([&](){checkFactors(newinput, result);});
             t1.join();
+            t2.join();
 
     }catch (const CLI::ParseError &error){
         return app.exit(error);
