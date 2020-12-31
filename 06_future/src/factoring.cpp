@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <future>
 #include "CLI11.hpp"
 #include "calc_factors.h"
 
@@ -30,6 +31,16 @@ string checkValidator(const string& s){
     }
 }
 
+void print(vector<InfInt> &numbers, vector<future<vector<InfInt>>> &result){
+    for(size_t i = 0; i < result.size(); i++){    
+        cout << numbers[i] << ": "<< flush;
+        vector<InfInt> results = result[i].get();
+        for(size_t j = 0; j < results.size(); j++){
+            cout << results[j] <<" "<< flush;
+        }
+        cout << "\n" << flush;
+    }
+}
 
 int main(int argc, char const *argv[]){
     vector<string> inputs;
@@ -38,26 +49,44 @@ int main(int argc, char const *argv[]){
     app.add_option("number", inputs, "numbers to factor")
         ->required()
         ->check(checkValidator);
-    bool asy{false};
-    app.add_flag("-a, --async", asy, "async");
+    bool async_option{false};
+    app.add_flag("-a, --async", async_option, "async");
     CLI11_PARSE(app, argc, argv);
     
     try{
             app.parse(argc, argv);
             vector<InfInt> newinput;
+            vector<future<vector<InfInt>>> result;
+
             for(size_t i = 0; i < inputs.size(); i++){
                 InfInt input_item = inputs[i];
                 newinput.push_back(input_item);
-                //cout << input_item << "\n" << flush;
             }
+
             for(size_t i = 0; i < newinput.size(); i++){
-                vector<InfInt> factors = get_factors(newinput[i]);
+                /*vector<InfInt> factors = get_factors(newinput[i]);
                 cout << newinput[i] << ": " << flush;
                 for(size_t j = 0; j < factors.size(); j++){
                     cout << factors[j] << " " << flush;
                 }
+                cout << "\n" << flush;*/
+                result.push_back(async(get_factors, newinput[i]));
+            }
+
+            /*
+            for(size_t i = 0; i < result.size(); i++){
+                cout << newinput[i] << ": " << flush;
+                vector<InfInt> results = result[i].get();
+                for(size_t j = 0; j < result.size(); j++){
+                    cout << results[j] << " " << flush;
+                }
                 cout << "\n" << flush;
             }
+            */
+
+            thread t1([&](){print(newinput, result);});
+            t1.join();
+
     }catch (const CLI::ParseError &error){
         return app.exit(error);
     }
