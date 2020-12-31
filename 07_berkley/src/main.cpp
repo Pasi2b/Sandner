@@ -43,6 +43,21 @@ class TimeMaster{
         }
 };
 
+class Channel{
+    private:
+        Pipe<long> p1;
+        Pipe<long> p2;
+
+    public:
+        Pipe<long>& get_pipe1(){
+            return p1;
+        }
+
+        Pipe<long>& get_pipe2(){
+            return p2;
+        }
+};
+
 
 int main(){
 
