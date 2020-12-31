@@ -14,7 +14,7 @@ inc_dir = include_directories(['include',
 
 #subdir('XXX')
 
-src = ['src/main.cpp']
+src = ['src/factoring.cpp']
 
 executable('factoring',
             sources : src,
