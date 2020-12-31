@@ -11,38 +11,6 @@
 
 using namespace std;
 
-
-
-class TimeSlave{
-    private:
-        string name;
-        Clock clock;
-
-    public:
-        TimeSlave(string name_, int hours_, int minutes_, int seconds_): clock(name_ + " clock", hours_, minutes_, seconds_){
-            name = name_;
-        }
-
-        void operator()(){
-            clock();
-        }
-};
-
-class TimeMaster{
-    private:
-        string name;
-        Clock clock;
-
-    public:
-        TimeMaster(string name_, int hours_, int minutes_, int seconds_): clock(name_ + " clock", hours_, minutes_, seconds_){
-            name = name_;
-        }
-
-        void operator()(){
-            clock();
-        }
-};
-
 class Channel{
     private:
         Pipe<long> p1;
@@ -58,6 +26,53 @@ class Channel{
         }
 };
 
+class TimeSlave{
+    private:
+        string name;
+        Clock clock;
+        Channel channel;
+
+    public:
+        TimeSlave(string name_, int hours_, int minutes_, int seconds_): clock(name_ + " clock ", hours_, minutes_, seconds_){
+            name = name_;
+        }
+
+        void operator()(){
+            clock();
+        }
+
+        Channel* get_channel(){
+            return &channel;
+        }
+};
+
+class TimeMaster{
+    private:
+        string name;
+        Clock clock;
+        Channel* channel1;
+        Channel* channel2;
+
+    public:
+        TimeMaster(string name_, int hours_, int minutes_, int seconds_): clock(name_ + " clock ", hours_, minutes_, seconds_){
+            name = name_;
+        }
+
+        void operator()(){
+            clock();
+        }
+
+        void set_Channel1(Channel* channel){
+            channel1 = channel;
+        }
+
+        void set_Channel2(Channel* channel){
+            channel2 = channel;
+        }
+};
+
+
+
 
 int main(){
 
@@ -66,10 +81,15 @@ int main(){
     //t1.join();
     //t2.join();
 
-    thread slave1(TimeSlave{"testslave", 12, 00, 00});
-    thread slave2(TimeSlave{"testslave2", 11, 00, 00});
-    thread timemaster1(TimeMaster{"testmaster", 10, 00, 00});
-    slave1.join();
-    slave2.join();
-    timemaster1.join();
+    TimeSlave slave1(TimeSlave{"testslave", 12, 00, 00});
+    TimeSlave slave2(TimeSlave{"testslave2", 11, 00, 00});
+    TimeMaster timemaster1(TimeMaster{"testmaster", 10, 00, 00});
+
+    thread s1{ref(slave1)};
+    thread s2{ref(slave2)};
+    thread m1{ref(timemaster1)};
+
+    s1.join();
+    s2.join();
+    m1.join();
 }
