@@ -7,6 +7,7 @@
 #include <vector>
 #include <thread>
 #include <future>
+#include <chrono>
 #include "CLI11.hpp"
 #include "calc_factors.h"
 
@@ -98,11 +99,17 @@ int main(int argc, char const *argv[]){
                 cout << "\n" << flush;
             }
             */
+            auto start = chrono::system_clock::now();
+            for(size_t i = 0; i < result.size(); i++){
+                result[i].wait();
+            }
 
+            auto duration = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now() - start);
             thread t1([&](){print(newinput, result);});
             thread t2([&](){checkFactors(newinput, result);});
             t1.join();
             t2.join();
+            cout << "Time elapsed used for factoring: " << duration.count() << "ms";
 
     }catch (const CLI::ParseError &error){
         return app.exit(error);
