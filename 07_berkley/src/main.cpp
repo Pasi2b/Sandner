@@ -35,6 +35,8 @@ int main(){
     //t1.join();
     //t2.join();
 
-    thread t1(TimeSlave{"testslave", 12, 00, 00});
-    t1.join();
+    thread slave1(TimeSlave{"testslave", 12, 00, 00});
+    thread slave2(TimeSlave{"testslave2", 10, 00, 00});
+    slave1.join();
+    slave2.join();
 }
