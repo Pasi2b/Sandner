@@ -19,7 +19,7 @@ src = ['src/main.cpp', 'src/clock.cpp']
 executable('berkley',
             sources : src,
             include_directories : inc_dir,
-            #dependencies : XXX_dep,
+            dependencies : thread_dep,
             #link_with : XXX_lib
            )
 
