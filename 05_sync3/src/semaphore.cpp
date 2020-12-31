@@ -9,19 +9,27 @@
 using namespace std;
 
 void Semaphore::release(){
-    cnr += 1;
-    wcv.notify_one();
+    unique_lock<mutex> ul{mtx};
+    not_empty.wait(ul, [this](){return (counter >= 0);});
+    counter--;
+    not_full.notify_one();
 }
 
 void Semaphore::acquire(){
     unique_lock<mutex> ul{mtx};
-    wcv.wait(ul, [&]() {
-        return (cnr - 1) >= 0;
-    });
-
-    cnr -= 1;
+    not_full.wait(ul, [this](){return (counter < MAXIMUM);});
+    counter++;
+    not_empty.notify_one();
 }
 
 int Semaphore::available_permits(){
-    return cnr;
+    return MAXIMUM - counter;
+}
+
+Semaphore::Semaphore(){
+    counter.store(0);
+}
+
+Semaphore::Semaphore(int start_value){
+    counter.store(start_value);
 }

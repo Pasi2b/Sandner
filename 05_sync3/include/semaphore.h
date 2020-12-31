@@ -10,12 +10,14 @@
 
 class Semaphore{
     private:
-        int cnr;
+        const int MAXIMUM = 4; 
+        std::atomic<int> counter;
         std::mutex mtx;
-        std::condition_variable wcv;
+        std::condition_variable not_empty;
+        std::condition_variable not_full;
     public:
-        Semaphore() : cnr{0}{};
-        Semaphore(int size) : cnr{size}{};
+        Semaphore();
+        Semaphore(int start_value);
         void acquire();
         void release();
         int available_permits();
